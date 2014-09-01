@@ -19,7 +19,7 @@ SOURCES += main.cpp \
 
 
 
-include(../../smartphonebrainscanner2-core/src/sbs2.pri)
+include(../smartphonebrainscanner2-core/src/sbs2.pri)
 
 HEADERS += \
     mycallback.h \
