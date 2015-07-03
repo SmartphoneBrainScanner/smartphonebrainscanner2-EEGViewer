@@ -1,9 +1,15 @@
 #include "scalpmap.h"
+// MRA
+#include <sbs2common.h>
 
 ScalpMap::ScalpMap(int scalling_, QWidget *parent) :
     QWidget(parent), scalling(scalling_)
 {
-    scalpmapPixmap = new QPixmap(":/scalpmap.png");
+    // MRA
+    QString img_path = Sbs2Common::getRootAppPath() + "scalpmap.png";
+    //qDebug() << "Scalpmap path:" << img_path;
+    scalpmapPixmap = new QPixmap("/scalpmap.png");
+    //scalpmapPixmap = new QPixmap(img_path);
     this->resize(scalpmapPixmap->width()/scalling,scalpmapPixmap->height()/scalling);
 
     setHardware("emotiv");
@@ -133,15 +139,13 @@ ScalpMap::ScalpMap(int scalling_, QWidget *parent) :
 
 void ScalpMap::paintEvent(QPaintEvent *event, QPainter* painter)
 {
-
-
     painter->drawPixmap(this->x(),this->y(),this->width(),this->height(),*scalpmapPixmap);
 
     foreach (QVector<double> electrode, electrodes[hardware])
     {
-	painter->setPen(QPen(getElectrodeColor(electrode.at(2))));
-	painter->setBrush(QBrush(getElectrodeColor(electrode.at(2))));
-	painter->drawRoundedRect(this->x() + electrode.at(0)/scalling - 10, this->y() + electrode.at(1)/scalling, 20,20,5,5);
+    painter->setPen(QPen(getElectrodeColor(electrode.at(2))));
+    painter->setBrush(QBrush(getElectrodeColor(electrode.at(2))));
+    painter->drawRoundedRect(this->x() + electrode.at(0)/scalling - 10, this->y() + electrode.at(1)/scalling, 20,20,5,5);
     }
 
 }
