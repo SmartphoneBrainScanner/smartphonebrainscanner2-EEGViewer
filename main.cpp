@@ -22,8 +22,8 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
 
     Sbs2Common::setHardware("emotiv");
 
-    //QObject::connect(app.data(),SIGNAL(aboutToQuit()),mw->glwidget,SLOT(kill()));
-    //QObject::connect(app.data(), SIGNAL(aboutToQuit()), sbs2DataReader, SLOT(aboutToQuit()));
+    QObject::connect(&app,SIGNAL(aboutToQuit()),mw->glwidget,SLOT(kill()));
+    QObject::connect(&app,SIGNAL(aboutToQuit()),sbs2DataReader,SLOT(aboutToQuit()));
     QObject::connect(myCallback,SIGNAL(valueSignal(int)),mw->glwidget,SLOT(update(int)));
     QObject::connect(myCallback,SIGNAL(gyroSignal(int,int)),mw->glwidget,SLOT(gyroSlot(int,int)));
     QObject::connect(mw->glwidget,SIGNAL(turnFilterOn(int,int,int)),myCallback,SLOT(turnFilterOn(int,int,int)));
