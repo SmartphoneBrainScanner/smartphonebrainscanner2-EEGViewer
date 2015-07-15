@@ -1,4 +1,4 @@
-    QT += opengl
+QT += opengl
 QT += core gui
 QT += widgets
 QT += declarative
@@ -19,9 +19,8 @@ SOURCES += main.cpp \
     glwidget.cpp
 
 
-
-include(../../smartphonebrainscanner2-core/src/sbs2.pri)
-#include(../../smartphonebrainscanner2-core/src/sbs2_binary_decryptor.pri)
+include(../smartphonebrainscanner2-core/src/sbs2.pri)
+# include(../smartphonebrainscanner2-core/src/sbs2_binary_decryptor.pri)
 
 
 HEADERS += \
