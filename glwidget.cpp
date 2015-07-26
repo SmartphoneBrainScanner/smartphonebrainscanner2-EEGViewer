@@ -29,12 +29,18 @@ GLWidget::GLWidget(MyCallback *myCallback_, QWidget *parent) :
     filterSetting = 0;
     scalpmapVisible = 0;
 
+    // MRA
+    pca = 0;
+
     paused = 0;
 
     filterText = "filter off";
     timeSeriesText = "time series";
     playText = "playing";
     scalpmapText = "values";
+
+    // MRA
+    pcaText = "pca off";
 
     scalpmap = new ScalpMap(1,this);
     scalpmap->move(240,150);
@@ -146,11 +152,16 @@ void GLWidget::generateGridSpectro()
 
 void GLWidget::generateUI()
 {
-    toggleFilterRect = QRect(20,this->h - 50, 200, 50);
+    // MRA width 200 -> 150
+    toggleFilterRect = QRect(20,this->h - 50, 150, 50);
     toggleTimeSeriesRect = QRect(toggleFilterRect.x() + toggleFilterRect.width() + 20, toggleFilterRect.y(), toggleFilterRect.width(), toggleFilterRect.height());
     togglePlayRect = QRect(toggleTimeSeriesRect.x() + toggleTimeSeriesRect.width() + 20, toggleFilterRect.y(), toggleFilterRect.width(), toggleFilterRect.height());
     toggleHardwareRect = QRect(togglePlayRect.x() + togglePlayRect.width() + 20, toggleFilterRect.y(), toggleFilterRect.width(), toggleFilterRect.height());
     toggleScalpmapRect = QRect(toggleHardwareRect.x() + toggleHardwareRect.width() + 20, toggleFilterRect.y(), toggleFilterRect.width(), toggleFilterRect.height());
+
+    // MRA
+    togglePcaRect = QRect(toggleScalpmapRect.x() + toggleScalpmapRect.width() + 20, toggleFilterRect.y(), toggleFilterRect.width(), toggleFilterRect.height());
+
     quitRect = QRect(this->w - toggleFilterRect.width() + 60, toggleFilterRect.y(), toggleFilterRect.width() - 60, toggleFilterRect.height());
 }
 
@@ -254,6 +265,9 @@ void GLWidget::paintGL()
 	painter->fillRect(toggleHardwareRect, QBrush(QColor("black")));
 	painter->fillRect(toggleScalpmapRect, QBrush(QColor("black")));
 
+    // MRA
+    painter->fillRect(togglePcaRect, QBrush(QColor("black")));
+
 
 	painter->setFont(QFont("helvetica",8));
 	painter->setPen(QColor("white"));
@@ -263,6 +277,9 @@ void GLWidget::paintGL()
 	painter->drawText(quitRect, Qt::AlignCenter, "quit");
 	painter->drawText(toggleHardwareRect, Qt::AlignCenter, Sbs2Common::getCurrentHardware());
 	painter->drawText(toggleScalpmapRect, Qt::AlignCenter, scalpmapText);
+
+    // MRA
+    painter->drawText(togglePcaRect, Qt::AlignCenter, pcaText);
     }
 
 
@@ -367,6 +384,23 @@ void GLWidget::toggleFilter()
 
 }
 
+// MRA
+void GLWidget::togglePca()
+{
+    pca = !pca;
+
+    if (pca)
+    {
+        emit turnPcaOn();
+        pcaText = "pca on";
+    }
+    else
+    {
+        emit turnPcaOff();
+        pcaText = "pca off";
+    }
+}
+
 void GLWidget::toggleTimeSeries()
 {
 
@@ -452,6 +486,13 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
     {
 	toggleScalpmap();
 	return;
+    }
+
+    // MRA
+    if (togglePcaRect.contains(event->pos()))
+    {
+        togglePca();
+        return;
     }
 
     if (quitRect.contains(event->pos()))

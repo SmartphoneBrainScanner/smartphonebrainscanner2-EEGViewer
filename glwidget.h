@@ -58,6 +58,9 @@ private:
     int filterSetting;
     int scalpmapVisible;
 
+    // MRA
+    int pca;
+
     QRect toggleFilterRect;
     QRect toggleTimeSeriesRect;
     QRect togglePlayRect;
@@ -65,10 +68,16 @@ private:
     QRect toggleHardwareRect;
     QRect toggleScalpmapRect;
 
+    // MRA
+    QRect togglePcaRect;
+
     QString filterText;
     QString timeSeriesText;
     QString playText;
     QString scalpmapText;
+
+    // MRA
+    QString pcaText;
 
     ScalpMap* scalpmap;
 
@@ -88,6 +97,9 @@ private:
     void toggleHardware();
     void toggleScalpmap();
 
+    // MRA
+    void togglePca();
+
     //Interaction
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent* event);
@@ -101,6 +113,10 @@ signals:
     void turnSpectrogramOn(int samples, int legnth, int delta);
     void turnFilterOff();
     void turnSpectrogramOff();
+
+    // MRA
+    void turnPcaOn();
+    void turnPcaOff();
 
 public slots:
      //void update(QVector<QList<int> > vs);
