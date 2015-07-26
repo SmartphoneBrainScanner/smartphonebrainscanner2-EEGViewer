@@ -18,6 +18,8 @@ private:
     int samples;
     int valuesIndex;
 
+    int pcaOn;
+
 signals:
     void valueSignal(int index);
     void gyroSignal(int gyroX, int gyroY);
@@ -25,6 +27,11 @@ signals:
     
 public slots:
     void spectrogramUpdatedSlot();
+    void pcaUpdatedSlot();
+
+    // MRA
+    void turnPcaOnSlot();
+    void turnPcaOffSlot();
 
 };
 

@@ -33,5 +33,9 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QObject::connect(mw->glwidget,SIGNAL(turnSpectrogramOff()),myCallback,SLOT(turnChannelSpectrogramOff()));
     QObject::connect(myCallback,SIGNAL(spectrogramUpdated()),mw->glwidget,SLOT(updateSpectro()));
 
+    // MRA
+    QObject::connect(mw->glwidget, SIGNAL(turnPcaOn()), myCallback, SLOT(turnPcaOnSlot()));
+    QObject::connect(mw->glwidget, SIGNAL(turnPcaOff()), myCallback, SLOT(turnPcaOffSlot()));
+
     return app.exec();
 }

@@ -3,7 +3,10 @@
 MyCallback::MyCallback(QObject *parent) :
     Sbs2Callback(parent)
 {
-    samplesToCollect = 4;
+    // MRA
+    samplesToCollect = 8; // from 4 to 8
+    pcaOn = 0;
+
     samples = 0;
     valuesIndex = 0;
 
@@ -28,6 +31,7 @@ MyCallback::MyCallback(QObject *parent) :
     }
 
     QObject::connect(sbs2DataHandler,SIGNAL(spectrogramUpdated()),this,SLOT(spectrogramUpdatedSlot()));
+    QObject::connect(sbs2DataHandler,SIGNAL(pcaUpdated()),this,SLOT(pcaUpdatedSlot()));
 
 }
 
@@ -35,10 +39,13 @@ void MyCallback::getData(Sbs2Packet *packet)
 {
     setPacket(packet);
     sbs2DataHandler->filter();
+    sbs2DataHandler->pca_filter();
     sbs2DataHandler->spectrogramChannel();
 
     emit gyroSignal(thisPacket->gyroX, thisPacket->gyroY);
 
+    if(!pcaOn)
+    {
     for (int i=0; i<Sbs2Common::channelsNo(); ++i)
     {
 	values[valuesIndex][i][samples] = thisPacket->filteredValues[Sbs2Common::getChannelNames()->at(i)];
@@ -55,6 +62,25 @@ void MyCallback::getData(Sbs2Packet *packet)
 	valuesIndex = (valuesIndex+1)%values.size();
 	samples = 0;
     }
+    }
+
+}
+
+void MyCallback::pcaUpdatedSlot()
+{
+    if(!pcaOn)
+        return;
+    
+    for (int i=0; i<Sbs2Common::channelsNo(); ++i)
+    {
+        for(int s = 0; s < samplesToCollect; s++)
+        {
+            values[valuesIndex][i][s] = (*sbs2DataHandler->getPcaValues())[s][i];
+        }
+    }
+
+    emit valueSignal(valuesIndex);
+    valuesIndex = (valuesIndex+1)%values.size();
 }
 
 void MyCallback::spectrogramUpdatedSlot()
@@ -67,4 +93,24 @@ void MyCallback::spectrogramUpdatedSlot()
 	}
     }
     emit spectrogramUpdated();
+}
+
+// MRA
+void MyCallback::turnPcaOnSlot()
+{
+    qDebug() << "MyCallBack: Turning pca on...";
+    sbs2DataHandler->turnPcaOn(12000);
+    pcaOn = 1;
+
+    // MRA TODO: Add signals to data handler as well
+}
+
+// MRA
+void MyCallback::turnPcaOffSlot()
+{
+    qDebug() << "MyCallBack: Turning pca off...";
+    sbs2DataHandler->turnPcaOff();
+    pcaOn = 0;
+
+    // MRA TODO: Add signals to data handler as well
 }
