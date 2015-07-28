@@ -31,57 +31,36 @@ MyCallback::MyCallback(QObject *parent) :
     }
 
     QObject::connect(sbs2DataHandler,SIGNAL(spectrogramUpdated()),this,SLOT(spectrogramUpdatedSlot()));
-    QObject::connect(sbs2DataHandler,SIGNAL(pcaUpdated()),this,SLOT(pcaUpdatedSlot()));
-
 }
 
 void MyCallback::getData(Sbs2Packet *packet)
 {
     setPacket(packet);
     sbs2DataHandler->filter();
-    sbs2DataHandler->pca_filter();
+    if (pcaOn)
+        sbs2DataHandler->pca_filter();
     sbs2DataHandler->spectrogramChannel();
 
     emit gyroSignal(thisPacket->gyroX, thisPacket->gyroY);
 
-    if(!pcaOn)
-    {
     for (int i=0; i<Sbs2Common::channelsNo(); ++i)
     {
-	values[valuesIndex][i][samples] = thisPacket->filteredValues[Sbs2Common::getChannelNames()->at(i)];
+        values[valuesIndex][i][samples] = thisPacket->filteredValues[Sbs2Common::getChannelNames()->at(i)];
     }
 
     ++samples;
 
     if (!(thisPacket->cq == -1))
-	emit cqValue(thisPacket->cqName, thisPacket->cq);
+        emit cqValue(thisPacket->cqName, thisPacket->cq);
 
     if (samples == samplesToCollect)
     {
-	emit valueSignal(valuesIndex);
-	valuesIndex = (valuesIndex+1)%values.size();
-	samples = 0;
+        emit valueSignal(valuesIndex);
+        valuesIndex = (valuesIndex+1)%values.size();
+        samples = 0;
     }
-    }
-
 }
 
-void MyCallback::pcaUpdatedSlot()
-{
-    if(!pcaOn)
-        return;
-    
-    for (int i=0; i<Sbs2Common::channelsNo(); ++i)
-    {
-        for(int s = 0; s < samplesToCollect; s++)
-        {
-            values[valuesIndex][i][s] = (*sbs2DataHandler->getPcaValues())[s][i];
-        }
-    }
-
-    emit valueSignal(valuesIndex);
-    valuesIndex = (valuesIndex+1)%values.size();
-}
 
 void MyCallback::spectrogramUpdatedSlot()
 {
