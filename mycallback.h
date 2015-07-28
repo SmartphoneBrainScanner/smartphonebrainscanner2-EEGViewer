@@ -27,7 +27,6 @@ signals:
     
 public slots:
     void spectrogramUpdatedSlot();
-    void pcaUpdatedSlot();
 
     // MRA
     void turnPcaOnSlot();
