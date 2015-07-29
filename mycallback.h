@@ -18,8 +18,6 @@ private:
     int samples;
     int valuesIndex;
 
-    int pcaOn;
-
 signals:
     void valueSignal(int index);
     void gyroSignal(int gyroX, int gyroY);
