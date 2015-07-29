@@ -5,7 +5,6 @@ MyCallback::MyCallback(QObject *parent) :
 {
     // MRA
     samplesToCollect = 8; // from 4 to 8
-    pcaOn = 0;
 
     samples = 0;
     valuesIndex = 0;
@@ -37,8 +36,7 @@ void MyCallback::getData(Sbs2Packet *packet)
 {
     setPacket(packet);
     sbs2DataHandler->filter();
-    if (pcaOn)
-        sbs2DataHandler->pca_filter();
+    sbs2DataHandler->pca_filter();
     sbs2DataHandler->spectrogramChannel();
 
     emit gyroSignal(thisPacket->gyroX, thisPacket->gyroY);
@@ -77,9 +75,8 @@ void MyCallback::spectrogramUpdatedSlot()
 // MRA
 void MyCallback::turnPcaOnSlot()
 {
-    qDebug() << "MyCallBack: Turning pca on...";
-    sbs2DataHandler->turnPcaOn(12000);
-    pcaOn = 1;
+    qDebug() << "mycallback.cpp: MyCallBack::turnPcaOnSlot: Turning pca on...";
+    sbs2DataHandler->turnPcaOn();
 
     // MRA TODO: Add signals to data handler as well
 }
@@ -89,7 +86,6 @@ void MyCallback::turnPcaOffSlot()
 {
     qDebug() << "MyCallBack: Turning pca off...";
     sbs2DataHandler->turnPcaOff();
-    pcaOn = 0;
 
     // MRA TODO: Add signals to data handler as well
 }
