@@ -157,7 +157,7 @@ void GLWidget::generateUI()
 void GLWidget::update(int index)
 {
     if (paused)
-	return;
+        return;
 
     QVector<QList<int> > vs = myCallback->values[index];
 
@@ -354,18 +354,15 @@ void GLWidget::toggleFilter()
 {
     filterSetting = !filterSetting;
 
-    if (filterSetting)
-    {
-	emit turnFilterOn(8,30,32);
-	filterText = "8-30Hz";
+    if (filterSetting) {
+        emit turnFilterOn(8, 30);
+        filterText = "8-30Hz";
+    } else {
+        emit turnFilterOff();
+        filterText = "filter off";
     }
-    else
-    {
-	emit turnFilterOff();
-	filterText = "filter off";
-    }
-
 }
+
 
 void GLWidget::toggleTimeSeries()
 {
@@ -375,12 +372,12 @@ void GLWidget::toggleTimeSeries()
     if (timeSeries)
     {
 	emit turnSpectrogramOff();
-	timeSeriesText = "time series";
+    timeSeriesText = "time series";
     }
     else
     {
 	emit turnSpectrogramOn(128,128,32);
-	timeSeriesText = "frequency";
+    timeSeriesText = "frequency";
     }
 }
 
@@ -389,20 +386,20 @@ void GLWidget::togglePlay()
     paused = !paused;
     if (paused)
     {
-	playText = "paused";
+    playText = "paused";
     }
     else
     {
-	playText = "playing";
+    playText = "playing";
     }
 }
 
 void GLWidget::toggleHardware()
 {
     if (Sbs2Common::getCurrentHardware() == "emocap")
-	myCallback->setHardware("emotiv");
+    myCallback->setHardware("emotiv");
     else
-	myCallback->setHardware("emocap");
+    myCallback->setHardware("emocap");
 }
 
 void GLWidget::toggleScalpmap()
@@ -411,11 +408,11 @@ void GLWidget::toggleScalpmap()
 
     if (scalpmapVisible)
     {
-	scalpmapText = "quality";
+    scalpmapText = "quality";
     }
     else
     {
-	scalpmapText = "values";
+    scalpmapText = "values";
     }
 }
 
