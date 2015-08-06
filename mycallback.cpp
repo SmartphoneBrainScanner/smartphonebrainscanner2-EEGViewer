@@ -36,7 +36,7 @@ void MyCallback::getData(Sbs2Packet *packet)
 {
     setPacket(packet);
     sbs2DataHandler->filter();
-    sbs2DataHandler->pca_filter();
+    sbs2DataHandler->asr_filter();
     sbs2DataHandler->spectrogramChannel();
 
     emit gyroSignal(thisPacket->gyroX, thisPacket->gyroY);
@@ -76,7 +76,7 @@ void MyCallback::spectrogramUpdatedSlot()
 void MyCallback::turnPcaOnSlot()
 {
     qDebug() << "mycallback.cpp: MyCallBack::turnPcaOnSlot: Turning pca on...";
-    sbs2DataHandler->turnPcaOn();
+    sbs2DataHandler->turnAsrOn();
 
     // MRA TODO: Add signals to data handler as well
 }
@@ -85,7 +85,7 @@ void MyCallback::turnPcaOnSlot()
 void MyCallback::turnPcaOffSlot()
 {
     qDebug() << "MyCallBack: Turning pca off...";
-    sbs2DataHandler->turnPcaOff();
+    sbs2DataHandler->turnAsrOff();
 
     // MRA TODO: Add signals to data handler as well
 }
