@@ -6,6 +6,10 @@
 #include <mainwindow.h>
 
 #include <hardware/emotiv/sbs2emotivdatareader.h>
+#include <hardware/fake/sbs2fakedatareader.h>
+
+// MRA
+//#define USE_FAKE_DATA 1
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
@@ -15,7 +19,15 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qDebug() << "rootAppPath: "<<Sbs2Common::setDefaultRootAppPath();
 
     MyCallback* myCallback = new MyCallback();
+
+    // MRA
+#ifdef USE_FAKE_DATA
+    Sbs2FakeDataReader* sbs2DataReader = Sbs2FakeDataReader::New(myCallback, 0);
+    sbs2DataReader->setFilename("data.txt");
+    sbs2DataReader->start();
+#else
     Sbs2EmotivDataReader* sbs2DataReader = Sbs2EmotivDataReader::New(myCallback,0);
+#endif
 
     MainWindow* mw = new MainWindow(myCallback);
     mw->setAttribute(Qt::WA_QuitOnClose);
