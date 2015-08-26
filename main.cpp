@@ -26,7 +26,8 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     QObject::connect(&app,SIGNAL(aboutToQuit()),sbs2DataReader,SLOT(aboutToQuit()));
     QObject::connect(myCallback,SIGNAL(valueSignal(int)),mw->glwidget,SLOT(update(int)));
     QObject::connect(myCallback,SIGNAL(gyroSignal(int,int)),mw->glwidget,SLOT(gyroSlot(int,int)));
-    QObject::connect(mw->glwidget,SIGNAL(turnFilterOn(int,int,int)),myCallback,SLOT(turnFilterOn(int,int,int)));
+    QObject::connect(mw->glwidget, SIGNAL(turnFilterOn(int, int)),
+                     myCallback, SLOT(turnFilterOn(int, int)));
     QObject::connect(mw->glwidget,SIGNAL(turnFilterOff()),myCallback,SLOT(turnFilterOff()));
     QObject::connect(mw->glwidget,SIGNAL(turnSpectrogramOn(int,int,int)),myCallback,SLOT(turnChannelSpectrogramOn(int,int,int)));
     QObject::connect(mw->glwidget,SIGNAL(turnSpectrogramOff()),myCallback,SLOT(turnChannelSpectrogramOff()));

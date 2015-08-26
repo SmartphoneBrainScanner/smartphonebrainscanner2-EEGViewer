@@ -3,23 +3,23 @@
 
 #include <QGLWidget>
 #include <QtOpenGL>
+
 #include <sbs2common.h>
-#include <mycallback.h>
-#include <scalpmap.h>
+#include "mycallback.h"
+#include "scalpmap.h"
 
 class GLWidget : public QGLWidget
 {
     Q_OBJECT
+
 public:
     explicit GLWidget(MyCallback* myCallback_, QWidget *parent = 0);
-
 
 private:
     QBasicTimer *timer;
 
     QVector<QPainterPath*> channels;
     QVector<QPainterPath*> channelsSpectro;
-
 
     QVector<QLine*> gridLines;
     QVector<QLine*> gridLinesSpectro;
@@ -93,12 +93,9 @@ private:
     void mouseMoveEvent(QMouseEvent* event);
     void mouseReleaseEvent(QMouseEvent *event);
 
-
-
-
 signals:
-    void turnFilterOn(int fbandLow, int fbandHigh, int order);
-    void turnSpectrogramOn(int samples, int legnth, int delta);
+    void turnFilterOn(int fbandLow, int fbandHigh);
+    void turnSpectrogramOn(int samples, int length, int delta);
     void turnFilterOff();
     void turnSpectrogramOff();
 
@@ -108,8 +105,6 @@ public slots:
     void updateSpectro();
     void gyroSlot(int gyroX_, int gyroY_);
     void kill();
-
-
 };
 
 #endif // GLWIDGET_H
