@@ -397,6 +397,23 @@ void GLWidget::togglePca()
     }
 }
 
+// MRA
+void GLWidget::togglePca()
+{
+    pca = !pca;
+
+    if (pca)
+    {
+        emit turnPcaOn();
+        pcaText = "pca on";
+    }
+    else
+    {
+        emit turnPcaOff();
+        pcaText = "pca off";
+    }
+}
+
 void GLWidget::toggleTimeSeries()
 {
 
