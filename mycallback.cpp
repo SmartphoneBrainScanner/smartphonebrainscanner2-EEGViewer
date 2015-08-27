@@ -3,7 +3,7 @@
 MyCallback::MyCallback(QObject *parent) :
     Sbs2Callback(parent)
 {
-    // MRA
+    // Artifact subspace reconstruction
     samplesToCollect = 8; // from 4 to 8
 
     samples = 0;
@@ -72,19 +72,19 @@ void MyCallback::spectrogramUpdatedSlot()
     emit spectrogramUpdated();
 }
 
-// MRA
-void MyCallback::turnPcaOnSlot()
+
+void MyCallback::turnAsrOnSlot()
 {
-    qDebug() << "mycallback.cpp: MyCallBack::turnPcaOnSlot: Turning pca on...";
+    qDebug() << "mycallback.cpp: MyCallBack::turnAsrOnSlot: Turning ASR on...";
     sbs2DataHandler->turnAsrOn();
 
     // MRA TODO: Add signals to data handler as well
 }
 
-// MRA
-void MyCallback::turnPcaOffSlot()
+
+void MyCallback::turnAsrOffSlot()
 {
-    qDebug() << "MyCallBack: Turning pca off...";
+    qDebug() << "MyCallBack: Turning ASR off...";
     sbs2DataHandler->turnAsrOff();
 
     // MRA TODO: Add signals to data handler as well

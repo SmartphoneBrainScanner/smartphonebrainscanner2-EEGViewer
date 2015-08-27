@@ -26,9 +26,9 @@ signals:
 public slots:
     void spectrogramUpdatedSlot();
 
-    // MRA
-    void turnPcaOnSlot();
-    void turnPcaOffSlot();
+    // Artifact subspace reconstruction
+    void turnAsrOnSlot();
+    void turnAsrOffSlot();
 
 };
 

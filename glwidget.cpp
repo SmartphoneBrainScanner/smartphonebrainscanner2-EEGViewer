@@ -29,8 +29,9 @@ GLWidget::GLWidget(MyCallback *myCallback_, QWidget *parent) :
     filterSetting = 0;
     scalpmapVisible = 0;
 
-    // MRA
-    pca = 0;
+    // Artifact subspace reconstruction
+    asr = 0;
+    asrText = "ASR off";
 
     paused = 0;
 
@@ -38,9 +39,6 @@ GLWidget::GLWidget(MyCallback *myCallback_, QWidget *parent) :
     timeSeriesText = "time series";
     playText = "playing";
     scalpmapText = "values";
-
-    // MRA
-    pcaText = "pca off";
 
     scalpmap = new ScalpMap(1,this);
     scalpmap->move(240,150);
@@ -160,7 +158,7 @@ void GLWidget::generateUI()
     toggleScalpmapRect = QRect(toggleHardwareRect.x() + toggleHardwareRect.width() + 20, toggleFilterRect.y(), toggleFilterRect.width(), toggleFilterRect.height());
 
     // MRA
-    togglePcaRect = QRect(toggleScalpmapRect.x() + toggleScalpmapRect.width() + 20, toggleFilterRect.y(), toggleFilterRect.width(), toggleFilterRect.height());
+    toggleAsrRect = QRect(toggleScalpmapRect.x() + toggleScalpmapRect.width() + 20, toggleFilterRect.y(), toggleFilterRect.width(), toggleFilterRect.height());
 
     quitRect = QRect(this->w - toggleFilterRect.width() + 60, toggleFilterRect.y(), toggleFilterRect.width() - 60, toggleFilterRect.height());
 }
@@ -266,7 +264,7 @@ void GLWidget::paintGL()
 	painter->fillRect(toggleScalpmapRect, QBrush(QColor("black")));
 
     // MRA
-    painter->fillRect(togglePcaRect, QBrush(QColor("black")));
+    painter->fillRect(toggleAsrRect, QBrush(QColor("black")));
 
 
 	painter->setFont(QFont("helvetica",8));
@@ -279,7 +277,7 @@ void GLWidget::paintGL()
 	painter->drawText(toggleScalpmapRect, Qt::AlignCenter, scalpmapText);
 
     // MRA
-    painter->drawText(togglePcaRect, Qt::AlignCenter, pcaText);
+    painter->drawText(toggleAsrRect, Qt::AlignCenter, asrText);
     }
 
 
@@ -381,19 +379,19 @@ void GLWidget::toggleFilter()
 }
 
 // MRA
-void GLWidget::togglePca()
+void GLWidget::toggleAsr()
 {
-    pca = !pca;
+    asr = !asr;
 
-    if (pca)
+    if (asr)
     {
-        emit turnPcaOn();
-        pcaText = "pca on";
+        emit turnAsrOn();
+        asrText = "ASR on";
     }
     else
     {
-        emit turnPcaOff();
-        pcaText = "pca off";
+        emit turnAsrOff();
+        asrText = "ASR off";
     }
 }
 
@@ -485,9 +483,9 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
     }
 
     // MRA
-    if (togglePcaRect.contains(event->pos()))
+    if (toggleAsrRect.contains(event->pos()))
     {
-        togglePca();
+        toggleAsr();
         return;
     }
 

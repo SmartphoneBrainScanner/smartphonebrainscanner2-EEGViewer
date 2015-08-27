@@ -58,8 +58,10 @@ private:
     int filterSetting;
     int scalpmapVisible;
 
-    // MRA
-    int pca;
+    // Artifact subspace reconstruction
+    int asr;
+    QRect toggleAsrRect;
+    QString asrText;
 
     QRect toggleFilterRect;
     QRect toggleTimeSeriesRect;
@@ -68,16 +70,10 @@ private:
     QRect toggleHardwareRect;
     QRect toggleScalpmapRect;
 
-    // MRA
-    QRect togglePcaRect;
-
     QString filterText;
     QString timeSeriesText;
     QString playText;
     QString scalpmapText;
-
-    // MRA
-    QString pcaText;
 
     ScalpMap* scalpmap;
 
@@ -98,7 +94,7 @@ private:
     void toggleScalpmap();
 
     // MRA
-    void togglePca();
+    void toggleAsr();
 
     //Interaction
     void mousePressEvent(QMouseEvent *event);
@@ -112,8 +108,8 @@ signals:
     void turnSpectrogramOff();
 
     // MRA
-    void turnPcaOn();
-    void turnPcaOff();
+    void turnAsrOn();
+    void turnAsrOff();
 
 public slots:
      //void update(QVector<QList<int> > vs);
