@@ -542,7 +542,9 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event)
 
 void GLWidget::kill()
 {
+#ifdef Q_OS_ANDROID
     system("su -c 'killall -9 org.kde.necessitas.example.EegViewer'");
+#endif
 }
 
 
