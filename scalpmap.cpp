@@ -3,8 +3,9 @@
 ScalpMap::ScalpMap(int scalling_, QWidget *parent) :
     QWidget(parent), scalling(scalling_)
 {
-    scalpmapPixmap = new QPixmap("scalpmap.png");
+    scalpmapPixmap = new QPixmap(":/scalpmap.png");
     this->resize(scalpmapPixmap->width()/scalling,scalpmapPixmap->height()/scalling);
+    this->hide();
 
     setHardware("emotiv");
 
