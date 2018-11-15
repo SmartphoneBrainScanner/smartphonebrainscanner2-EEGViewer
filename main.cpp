@@ -1,6 +1,4 @@
 #include <QApplication>
-//#include "qmlapplicationviewer.h"
-#include <QtDeclarative>
 
 #include <mycallback.h>
 #include <mainwindow.h>
