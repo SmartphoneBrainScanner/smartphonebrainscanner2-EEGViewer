@@ -7,7 +7,6 @@
 GLWidget::GLWidget(MyCallback *myCallback_, QWidget *parent) :
     QGLWidget(parent), timer(new QBasicTimer), myCallback(myCallback_)
 {
-    painter = new QPainter(this);
     setAutoBufferSwap(false);
 
     values = 256;
@@ -218,131 +217,148 @@ void GLWidget::initializeGL()
 void GLWidget::paintGL()
 {
 
-    painter->begin(this);
+    QPainter painter(this);
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
     if (timeSeries)
     {
-	painter->setPen(QPen(QBrush(QColor(0,0,0,120)),1));
-	foreach (QLine* gridLine, gridLines)
-	{
-	    painter->drawLine(*gridLine);
-	}
+        painter.setPen(QPen(QBrush(QColor(0,0,0,120)),1));
+        foreach (QLine* gridLine, gridLines)
+        {
+            painter.drawLine(*gridLine);
+        }
     }
     else
     {
-	painter->setPen(QPen(QBrush(QColor(0,0,0,120)),1));
-	foreach (QLine* gridLine, gridLinesSpectro)
-	{
-	    painter->drawLine(*gridLine);
-	}
+        painter.setPen(QPen(QBrush(QColor(0,0,0,120)),1));
+        foreach (QLine* gridLine, gridLinesSpectro)
+        {
+            painter.drawLine(*gridLine);
+        }
 
     }
 
     if (timeSeries)
     {
-	painter->setPen(QPen(QBrush(QColor("red")),2));
-	painter->drawLine(channels.at(0)->elementAt(currentPosition).x,0,channels.at(0)->elementAt(currentPosition).x,this->h);
+        painter.setPen(QPen(QBrush(QColor("red")),2));
+        painter.drawLine(channels.at(0)->elementAt(currentPosition).x,0,channels.at(0)->elementAt(currentPosition).x,this->h);
     }
 
     if (!scalpmapVisible)
     {
-	painter->fillRect(toggleFilterRect, QBrush(QColor("black")));
-	painter->fillRect(toggleTimeSeriesRect, QBrush(QColor("black")));
-	painter->fillRect(togglePlayRect,QBrush(QColor("black")));
-	painter->fillRect(quitRect, QBrush(QColor("black")));
-	painter->fillRect(toggleHardwareRect, QBrush(QColor("black")));
-	painter->fillRect(toggleScalpmapRect, QBrush(QColor("black")));
+        painter.fillRect(toggleFilterRect, QBrush(QColor("black")));
+        painter.fillRect(toggleTimeSeriesRect, QBrush(QColor("black")));
+        painter.fillRect(togglePlayRect,QBrush(QColor("black")));
+        painter.fillRect(quitRect, QBrush(QColor("black")));
+        painter.fillRect(toggleHardwareRect, QBrush(QColor("black")));
+        painter.fillRect(toggleScalpmapRect, QBrush(QColor("black")));
 
 
-	painter->setFont(QFont("helvetica",8));
-	painter->setPen(QColor("white"));
-	painter->drawText(toggleFilterRect, Qt::AlignCenter, filterText);
-	painter->drawText(toggleTimeSeriesRect, Qt::AlignCenter, timeSeriesText);
-	painter->drawText(togglePlayRect, Qt::AlignCenter, playText);
-	painter->drawText(quitRect, Qt::AlignCenter, "quit");
-	painter->drawText(toggleHardwareRect, Qt::AlignCenter, Sbs2Common::getCurrentHardware());
-	painter->drawText(toggleScalpmapRect, Qt::AlignCenter, scalpmapText);
+        painter.setFont(QFont("helvetica",8));
+        painter.setPen(QColor("white"));
+        painter.drawText(toggleFilterRect, Qt::AlignCenter, filterText);
+        painter.drawText(toggleTimeSeriesRect, Qt::AlignCenter, timeSeriesText);
+        painter.drawText(togglePlayRect, Qt::AlignCenter, playText);
+        painter.drawText(quitRect, Qt::AlignCenter, "quit");
+        painter.drawText(toggleHardwareRect, Qt::AlignCenter, Sbs2Common::getCurrentHardware());
+        painter.drawText(toggleScalpmapRect, Qt::AlignCenter, scalpmapText);
     }
 
 
     for (int j = 0; j < channels.size(); ++j)
     {
-	if (j == 0)
-	    painter->setPen(QPen(QBrush(QColor("blue")),2));
-	if (j == 1)
-	    painter->setPen(QPen(QBrush(QColor("green")),2));
-	if (j == 2)
-	    painter->setPen(QPen(QBrush(QColor("red")),2));
-	if (j == 3)
-	    painter->setPen(QPen(QBrush(QColor("black")),2));
-	if (j == 4)
-	    painter->setPen(QPen(QBrush(QColor("purple")),2));
-	if (j == 5)
-	    painter->setPen(QPen(QBrush(QColor("orange")),2));
-	if (j == 6)
-	    painter->setPen(QPen(QBrush(QColor("indigo")),2));
-	if (j == 7)
-	    painter->setPen(QPen(QBrush(QColor("olive")),2));
-	if (j == 8)
-	    painter->setPen(QPen(QBrush(QColor("salmon")),2));
-	if (j == 9)
-	    painter->setPen(QPen(QBrush(QColor("magenta")),2));
-	if (j == 10)
-	    painter->setPen(QPen(QBrush(QColor("lime")),2));
-	if (j == 11)
-	    painter->setPen(QPen(QBrush(QColor("darkred")),2));
-	if (j == 12)
-	    painter->setPen(QPen(QBrush(QColor("navy")),2));
-	if (j == 13)
-	    painter->setPen(QPen(QBrush(QColor("brown")),2));
+        switch(j)
+        {
+        case 0:
+            painter.setPen(QPen(QColor("blue"),2));
+            break;
+        case 1:
+            painter.setPen(QPen(QColor("green"),2));
+            break;
+        case 2:
+            painter.setPen(QPen(QColor("red"),2));
+            break;
+        case 3:
+            painter.setPen(QPen(QColor("black"),2));
+            break;
+        case 4:
+            painter.setPen(QPen(QColor("purple"),2));
+            break;
+        case 5:
+            painter.setPen(QPen(QColor("orange"),2));
+            break;
+        case 6:
+            painter.setPen(QPen(QColor("indigo"),2));
+            break;
+        case 7:
+            painter.setPen(QPen(QColor("olive"),2));
+            break;
+        case 8:
+            painter.setPen(QPen(QColor("salmon"),2));
+            break;
+        case 9:
+            painter.setPen(QPen(QColor("magenta"),2));
+            break;
+        case 10:
+            painter.setPen(QPen(QColor("lime"),2));
+            break;
+        case 11:
+            painter.setPen(QPen(QColor("darkred"),2));
+            break;
+        case 12:
+            painter.setPen(QPen(QColor("navy"),2));
+            break;
+        case 13:
+            painter.setPen(QPen(QColor("brown"),2));
+            break;
+        default:
+            assert(false);
+            break;
+        }
 
-	if (timeSeries)
-	    painter->drawPath(*(channels.at(j)));
-	else
-	    painter->drawPath(*(channelsSpectro.at(j)));
+        if (timeSeries)
+        {
+            painter.drawPath(*(channels.at(j)));
+        }
+        else
+        {
+            painter.drawPath(*(channelsSpectro.at(j)));
+        }
 
     }
 
 
 
-    painter->setFont(QFont("helvetica",8));
-    painter->setPen(QColor("black"));
+    painter.setFont(QFont("helvetica",8));
+    painter.setPen(QColor("black"));
     for (int i=0; i<Sbs2Common::channelsNo();++i)
     {
-	painter->drawText(0,(i+1)*50,Sbs2Common::getChannelNames()->at(i));
+        painter.drawText(0,(i+1)*50,Sbs2Common::getChannelNames()->at(i));
     }
 
-
-
-
-
-    painter->drawEllipse(gyroPosX-5,gyroPosY-5,10,10);
+    painter.drawEllipse(gyroPosX-5,gyroPosY-5,10,10);
 
     if (startY != -1)
     {
-	painter->setFont(QFont("helvetica",80));
-	painter->drawText(this->w/2 - 80,this->h/2 - 20,QString::number(scale));
+        painter.setFont(QFont("helvetica",80));
+        painter.drawText(this->w/2 - 80,this->h/2 - 20,QString::number(scale));
     }
 
     if (scalpmapVisible)
     {
-	painter->fillRect(this->rect(),QBrush(QColor("white")));
-	scalpmap->paintEvent(0, painter);
-	painter->fillRect(quitRect, QBrush(QColor("black")));
-	painter->fillRect(toggleHardwareRect, QBrush(QColor("black")));
-	painter->fillRect(toggleScalpmapRect, QBrush(QColor("black")));
-	painter->setFont(QFont("helvetica",8));
-	painter->setPen(QColor("white"));
-	painter->drawText(quitRect, Qt::AlignCenter, "quit");
-	painter->drawText(toggleHardwareRect, Qt::AlignCenter, Sbs2Common::getCurrentHardware());
-	painter->drawText(toggleScalpmapRect, Qt::AlignCenter, scalpmapText);
+        painter.fillRect(this->rect(),QBrush(QColor("white")));
+        scalpmap->paintEvent(0, &painter);
+        painter.fillRect(quitRect, QBrush(QColor("black")));
+        painter.fillRect(toggleHardwareRect, QBrush(QColor("black")));
+        painter.fillRect(toggleScalpmapRect, QBrush(QColor("black")));
+        painter.setFont(QFont("helvetica",8));
+        painter.setPen(QColor("white"));
+        painter.drawText(quitRect, Qt::AlignCenter, "quit");
+        painter.drawText(toggleHardwareRect, Qt::AlignCenter, Sbs2Common::getCurrentHardware());
+        painter.drawText(toggleScalpmapRect, Qt::AlignCenter, scalpmapText);
     }
 
-
-    painter->end();
     swapBuffers();
-
 }
 
 void GLWidget::timerEvent(QTimerEvent *)
@@ -495,6 +511,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 
 void GLWidget::mouseReleaseEvent(QMouseEvent *event)
 {
+    Q_UNUSED(event);
     startY = -1;
     lastD = 0;
     startX = -1;

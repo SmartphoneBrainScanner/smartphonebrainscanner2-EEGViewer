@@ -41,7 +41,6 @@ private:
     double gyroPosY;
     double gyroGravity;
 
-    QPainter* painter;
     QVector<QList<int> > rawValues;
     QVector<QList<double> > rawValuesSpectro;
 
