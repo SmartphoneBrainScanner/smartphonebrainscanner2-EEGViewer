@@ -519,7 +519,7 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event)
 
 void GLWidget::kill()
 {
-    system("su -c 'killall -9 org.kde.necessitas.example.EegViewer'");
+//system("su -c 'killall -9 org.kde.necessitas.example.EegViewer'");
 }
 
 
