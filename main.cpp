@@ -18,8 +18,6 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     MainWindow* mw = new MainWindow(myCallback);
     mw->setAttribute(Qt::WA_QuitOnClose);
 
-    Sbs2Common::setHardware("emotiv");
-
     QObject::connect(&app,SIGNAL(aboutToQuit()),mw->glwidget,SLOT(kill()));
     QObject::connect(&app,SIGNAL(aboutToQuit()),sbs2DataReader,SLOT(aboutToQuit()));
     QObject::connect(myCallback,SIGNAL(valueSignal(int)),mw->glwidget,SLOT(update(int)));
