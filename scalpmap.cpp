@@ -134,6 +134,7 @@ ScalpMap::ScalpMap(int scalling_, QWidget *parent) :
 
 void ScalpMap::paintEvent(QPaintEvent *event, QPainter* painter)
 {
+    Q_UNUSED(event);
 
 
     painter->drawPixmap(this->x(),this->y(),this->width(),this->height(),*scalpmapPixmap);

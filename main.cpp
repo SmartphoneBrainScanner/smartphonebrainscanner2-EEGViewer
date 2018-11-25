@@ -1,26 +1,37 @@
 #include <QApplication>
-//#include "qmlapplicationviewer.h"
-#include <QtDeclarative>
 
 #include <mycallback.h>
 #include <mainwindow.h>
 
 #include <hardware/emotiv/sbs2emotivdatareader.h>
+#include <hardware/filereader/sbs2filedatareader.h>
 
 Q_DECL_EXPORT int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
+    QCommandLineParser parser;
+    QCommandLineOption dataFilePath("datafile","File to read instead of device", "filepath");
+    parser.addOption(dataFilePath);
+    parser.addHelpOption();
+    parser.process(app);
+
     qDebug() << "catalogPath: "<<Sbs2Common::setDefaultCatalogPath();
     qDebug() << "rootAppPath: "<<Sbs2Common::setDefaultRootAppPath();
 
     MyCallback* myCallback = new MyCallback();
-    Sbs2EmotivDataReader* sbs2DataReader = Sbs2EmotivDataReader::New(myCallback,0);
+    Sbs2DataReader* sbs2DataReader = nullptr;
+    if (!parser.isSet(dataFilePath))
+    {
+        sbs2DataReader = Sbs2EmotivDataReader::New(myCallback,0);
+    }
+    else
+    {
+        sbs2DataReader = new Sbs2FileDataReader(myCallback,parser.value(dataFilePath));
+    }
 
     MainWindow* mw = new MainWindow(myCallback);
     mw->setAttribute(Qt::WA_QuitOnClose);
-
-    Sbs2Common::setHardware("emotiv");
 
     QObject::connect(&app,SIGNAL(aboutToQuit()),mw->glwidget,SLOT(kill()));
     QObject::connect(&app,SIGNAL(aboutToQuit()),sbs2DataReader,SLOT(aboutToQuit()));

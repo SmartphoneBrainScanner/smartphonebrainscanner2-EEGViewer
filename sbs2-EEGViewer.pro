@@ -1,17 +1,8 @@
 QT += opengl
 QT += core gui
 QT += widgets
-QT += declarative
 
-# If your application uses the Qt Mobility libraries, uncomment the following
-# lines and add the respective components to the MOBILITY variable.
-# CONFIG += mobility
-# MOBILITY +=
-
-# Speed up launching on MeeGo/Harmattan when using applauncherd daemon
-# CONFIG += qdeclarative-boostable
-
-# The .cpp file which was generated for your project. Feel free to hack it.
+win32:LIBS += opengl32.lib   
 SOURCES += main.cpp \
     mycallback.cpp \
     scalpmap.cpp \
@@ -20,8 +11,6 @@ SOURCES += main.cpp \
 
 
 include(../smartphonebrainscanner2-core/src/sbs2.pri)
-# include(../smartphonebrainscanner2-core/src/sbs2_binary_decryptor.pri)
-
 
 HEADERS += \
     mycallback.h \
@@ -31,3 +20,7 @@ HEADERS += \
 
 RESOURCES += \
     resources.qrc
+
+target.path = /bin/
+INSTALLS += target
+win32:RC_ICONS += eegviewer.ico
