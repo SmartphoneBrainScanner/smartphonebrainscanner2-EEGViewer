@@ -18,11 +18,11 @@ public:
 private:
     QBasicTimer *timer;
 
-    QVector<QPainterPath*> channels;
-    QVector<QPainterPath*> channelsSpectro;
+    QVector<QPainterPath> channels;
+    QVector<QPainterPath> channelsSpectro;
 
-    QVector<QLine*> gridLines;
-    QVector<QLine*> gridLinesSpectro;
+    QVector<QLine> gridLines;
+    QVector<QLine> gridLinesSpectro;
 
     int w;
     int h;
