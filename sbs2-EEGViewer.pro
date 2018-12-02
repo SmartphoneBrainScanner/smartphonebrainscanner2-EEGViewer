@@ -23,3 +23,6 @@ RESOURCES += \
 target.path = /bin/
 INSTALLS += target
 win32:RC_ICONS += eegviewer.ico
+
+ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android-sources/
+OTHER_FILES += android-sources/AndroidManifest.xml
