@@ -1,4 +1,3 @@
-QT += opengl
 QT += core gui
 QT += widgets
 

@@ -1,14 +1,13 @@
 #ifndef GLWIDGET_H
 #define GLWIDGET_H
 
-#include <QGLWidget>
-#include <QtOpenGL>
+#include <QOpenGLWidget>
 
 #include <sbs2common.h>
 #include "mycallback.h"
 #include "scalpmap.h"
 
-class GLWidget : public QGLWidget
+class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 {
     Q_OBJECT
 

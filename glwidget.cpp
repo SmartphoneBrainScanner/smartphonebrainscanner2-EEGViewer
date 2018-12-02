@@ -1,14 +1,15 @@
 #include "glwidget.h"
 
+#include <QApplication>
+
 #if defined(Q_OS_MAC)
 #include <OpenGL.h>
 #endif
 
 GLWidget::GLWidget(MyCallback *myCallback_, QWidget *parent) :
-    QGLWidget(parent), timer(new QBasicTimer), myCallback(myCallback_)
+    QOpenGLWidget(parent), timer(new QBasicTimer), myCallback(myCallback_)
 {
-    setAutoBufferSwap(false);
-
+    setUpdateBehavior(QOpenGLWidget::NoPartialUpdate);
     values = 256;
     currentPosition = 0;
     valuesSpectro = Sbs2Common::samplingRate()/2;
@@ -206,6 +207,7 @@ void GLWidget::updateSpectro()
 
 void GLWidget::initializeGL()
 {
+    initializeOpenGLFunctions();
 #if defined(Q_OS_MAC)
     const GLint swapInterval = 1;
     CGLSetParameter(CGLGetCurrentContext(), kCGLCPSwapInterval, &swapInterval);
@@ -220,6 +222,7 @@ void GLWidget::paintGL()
     QPainter painter(this);
 
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     painter.setRenderHint(QPainter::TextAntialiasing);
 
     if (timeSeries)
@@ -359,13 +362,11 @@ void GLWidget::paintGL()
         painter.drawText(toggleHardwareRect, Qt::AlignCenter, Sbs2Common::getCurrentHardware());
         painter.drawText(toggleScalpmapRect, Qt::AlignCenter, scalpmapText);
     }
-
-    swapBuffers();
 }
 
 void GLWidget::timerEvent(QTimerEvent *)
 {
-    updateGL();
+    QOpenGLWidget::update();
 }
 
 void GLWidget::toggleFilter()
@@ -471,7 +472,7 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
 
     if (quitRect.contains(event->pos()))
     {
-	QApplication::quit();
+        QApplication::quit();
     }
 
     startX = event->pos().x();
