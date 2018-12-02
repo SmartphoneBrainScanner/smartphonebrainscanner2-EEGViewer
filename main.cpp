@@ -20,6 +20,7 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     qDebug() << "rootAppPath: "<<Sbs2Common::setDefaultRootAppPath();
 
     MyCallback* myCallback = new MyCallback();
+#ifndef Q_OS_ANDROID
     Sbs2DataReader* sbs2DataReader = nullptr;
     if (!parser.isSet(dataFilePath))
     {
@@ -29,6 +30,9 @@ Q_DECL_EXPORT int main(int argc, char *argv[])
     {
         sbs2DataReader = new Sbs2FileDataReader(myCallback,parser.value(dataFilePath));
     }
+#else
+    Sbs2DataReader* sbs2DataReader = new Sbs2FileDataReader(myCallback,"assets:/sbs2data_2018_12_01_21_07_22_Test.raw");
+#endif
 
     MainWindow* mw = new MainWindow(myCallback);
     mw->setAttribute(Qt::WA_QuitOnClose);
