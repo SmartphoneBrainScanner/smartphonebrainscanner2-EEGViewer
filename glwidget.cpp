@@ -1,14 +1,15 @@
 #include "glwidget.h"
 
+#include <QApplication>
+
 #if defined(Q_OS_MAC)
 #include <OpenGL.h>
 #endif
 
 GLWidget::GLWidget(MyCallback *myCallback_, QWidget *parent) :
-    QGLWidget(parent), timer(new QBasicTimer), myCallback(myCallback_)
+    QOpenGLWidget(parent), timer(new QBasicTimer), myCallback(myCallback_)
 {
-    setAutoBufferSwap(false);
-
+    setUpdateBehavior(QOpenGLWidget::NoPartialUpdate);
     values = 256;
     currentPosition = 0;
     valuesSpectro = Sbs2Common::samplingRate()/2;
@@ -85,12 +86,12 @@ void GLWidget::generatePaths()
 
     for (int channel = 0; channel < Sbs2Common::channelsNo(); ++channel)
     {
-	channels.append(new QPainterPath());
+    channels.append(QPainterPath());
 	rawValues.append(QList<int>());
-	channels.last()->moveTo(0,(channel+1)*50);
+    channels.last().moveTo(0,(channel+1)*50);
 	for (int i = 0; i < values-1; ++i)
 	{
-	    channels.last()->lineTo(channels.last()->currentPosition().x() + this->valueToValueDistance,channels.last()->currentPosition().y());
+        channels.last().lineTo(channels.last().currentPosition().x() + this->valueToValueDistance,channels.last().currentPosition().y());
 	    rawValues[channel].append(0);
 	}
 	rawValues[channel].append(0);
@@ -110,12 +111,12 @@ void GLWidget::generatePathsSpectro()
 
     for (int channel = 0; channel < Sbs2Common::channelsNo(); ++channel)
     {
-	channelsSpectro.append(new QPainterPath());
+    channelsSpectro.append(QPainterPath());
 	rawValuesSpectro.append(QList<double>());
-	channelsSpectro.last()->moveTo(0,(channel+1)*50);
+    channelsSpectro.last().moveTo(0,(channel+1)*50);
 	for (int i = 0; i < valuesSpectro-1; ++i)
 	{
-	    channelsSpectro.last()->lineTo(channelsSpectro.last()->currentPosition().x() + this->valueToValueSpectroDistance,channelsSpectro.last()->currentPosition().y());
+        channelsSpectro.last().lineTo(channelsSpectro.last().currentPosition().x() + this->valueToValueSpectroDistance,channelsSpectro.last().currentPosition().y());
 
 	    rawValuesSpectro[channel].append(0);
 	}
@@ -128,7 +129,7 @@ void GLWidget::generateGrid()
 {
     for (int i = 0; i < values/32 - 1; ++i)
     {
-	gridLines.append(new QLine(channels.at(0)->elementAt((i+1)*32).x,0,channels.at(0)->elementAt((i+1)*32).x,this->h));
+        gridLines.append(QLine(channels.at(0).elementAt((i+1)*32).x,0,channels.at(0).elementAt((i+1)*32).x,this->h));
     }
 }
 
@@ -138,7 +139,7 @@ void GLWidget::generateGridSpectro()
     {
 	if (i%10==0 && i > 0)
 	{
-	    gridLinesSpectro.append(new QLine(channelsSpectro.at(0)->elementAt(i).x,0,channelsSpectro.at(0)->elementAt(i).x,this->h));
+        gridLinesSpectro.append(QLine(channelsSpectro.at(0).elementAt(i).x,0,channelsSpectro.at(0).elementAt(i).x,this->h));
 	}
     }
 }
@@ -175,7 +176,7 @@ void GLWidget::update(int index)
 	    int pp = p;
 	    if (pp < 0) pp = this->values + pp;
 	    double v = (mean - vs.at(channel).at(u))/scale + (channel+1)*50;
-	    channels.at(channel)->setElementPositionAt(pp,channels.at(channel)->elementAt(pp).x,v);
+        channels[channel].setElementPositionAt(pp,channels.at(channel).elementAt(pp).x,v);
 	    rawValues[channel][pp] = vs.at(channel).at(u);
 	    --u;
 	}
@@ -199,13 +200,14 @@ void GLWidget::updateSpectro()
 	for (int p = 0; p < valuesSpectro; ++p)
 	{
 	    double v = (- rawValuesSpectro.at(channel).at(p) * 10.0)/scale + (channel+2)*50;
-	    channelsSpectro.at(channel)->setElementPositionAt(p,channelsSpectro.at(channel)->elementAt(p).x,v);
+        channelsSpectro[channel].setElementPositionAt(p,channelsSpectro.at(channel).elementAt(p).x,v);
 	}
     }
 }
 
 void GLWidget::initializeGL()
 {
+    initializeOpenGLFunctions();
 #if defined(Q_OS_MAC)
     const GLint swapInterval = 1;
     CGLSetParameter(CGLGetCurrentContext(), kCGLCPSwapInterval, &swapInterval);
@@ -218,22 +220,25 @@ void GLWidget::paintGL()
 {
 
     QPainter painter(this);
+
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    painter.setRenderHint(QPainter::TextAntialiasing);
 
     if (timeSeries)
     {
         painter.setPen(QPen(QBrush(QColor(0,0,0,120)),1));
-        foreach (QLine* gridLine, gridLines)
+        for (const QLine& gridLine : qAsConst(gridLines))
         {
-            painter.drawLine(*gridLine);
+            painter.drawLine(gridLine);
         }
     }
     else
     {
         painter.setPen(QPen(QBrush(QColor(0,0,0,120)),1));
-        foreach (QLine* gridLine, gridLinesSpectro)
+        for (const QLine& gridLine : qAsConst(gridLinesSpectro))
         {
-            painter.drawLine(*gridLine);
+            painter.drawLine(gridLine);
         }
 
     }
@@ -241,7 +246,7 @@ void GLWidget::paintGL()
     if (timeSeries)
     {
         painter.setPen(QPen(QBrush(QColor("red")),2));
-        painter.drawLine(channels.at(0)->elementAt(currentPosition).x,0,channels.at(0)->elementAt(currentPosition).x,this->h);
+        painter.drawLine(channels.at(0).elementAt(currentPosition).x,0,channels.at(0).elementAt(currentPosition).x,this->h);
     }
 
     if (!scalpmapVisible)
@@ -318,11 +323,11 @@ void GLWidget::paintGL()
 
         if (timeSeries)
         {
-            painter.drawPath(*(channels.at(j)));
+            painter.drawPath(channels.at(j));
         }
         else
         {
-            painter.drawPath(*(channelsSpectro.at(j)));
+            painter.drawPath(channelsSpectro.at(j));
         }
 
     }
@@ -357,13 +362,11 @@ void GLWidget::paintGL()
         painter.drawText(toggleHardwareRect, Qt::AlignCenter, Sbs2Common::getCurrentHardware());
         painter.drawText(toggleScalpmapRect, Qt::AlignCenter, scalpmapText);
     }
-
-    swapBuffers();
 }
 
 void GLWidget::timerEvent(QTimerEvent *)
 {
-    updateGL();
+    QOpenGLWidget::update();
 }
 
 void GLWidget::toggleFilter()
@@ -469,7 +472,7 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
 
     if (quitRect.contains(event->pos()))
     {
-	QApplication::quit();
+        QApplication::quit();
     }
 
     startX = event->pos().x();

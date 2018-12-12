@@ -1,14 +1,13 @@
 #ifndef GLWIDGET_H
 #define GLWIDGET_H
 
-#include <QGLWidget>
-#include <QtOpenGL>
+#include <QOpenGLWidget>
 
 #include <sbs2common.h>
 #include "mycallback.h"
 #include "scalpmap.h"
 
-class GLWidget : public QGLWidget
+class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions
 {
     Q_OBJECT
 
@@ -18,11 +17,11 @@ public:
 private:
     QBasicTimer *timer;
 
-    QVector<QPainterPath*> channels;
-    QVector<QPainterPath*> channelsSpectro;
+    QVector<QPainterPath> channels;
+    QVector<QPainterPath> channelsSpectro;
 
-    QVector<QLine*> gridLines;
-    QVector<QLine*> gridLinesSpectro;
+    QVector<QLine> gridLines;
+    QVector<QLine> gridLinesSpectro;
 
     int w;
     int h;
